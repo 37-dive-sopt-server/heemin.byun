@@ -1,5 +1,6 @@
 package org.sopt.service;
 
+import org.sopt.domain.Gender;
 import org.sopt.domain.Member;
 import org.sopt.repository.MemoryMemberRepository;
 
@@ -11,9 +12,12 @@ public class MemberServiceImpl implements MemberService {
     private final MemoryMemberRepository memberRepository = new MemoryMemberRepository();
     private static long sequence = 1L;
 
-    public Long join(String name) {
+    public Long join(String name, String birthdate, String email, Gender gender) {
 
-        Member member = new Member(sequence++, name);
+        if (memberRepository.existsActiveByEmail(email)) {
+            throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
+        }
+        Member member = new Member(sequence++, name,birthdate,email,gender);
         memberRepository.save(member);
         return member.getId();
     }
@@ -24,5 +28,9 @@ public class MemberServiceImpl implements MemberService {
 
     public List<Member> findAllMembers() {
         return memberRepository.findAll();
+    }
+
+    public boolean delete(Long memberId) {
+        return memberRepository.softDelete(memberId);
     }
 }
