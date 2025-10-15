@@ -3,6 +3,9 @@ package org.sopt;
 import org.sopt.controller.MemberController;
 import org.sopt.domain.Gender;
 import org.sopt.domain.Member;
+import org.sopt.exception.DuplicateEmailException;
+import org.sopt.exception.MemberException;
+import org.sopt.exception.MemberNotFoundException;
 import org.sopt.repository.MemoryMemberRepository;
 import org.sopt.service.MemberServiceImpl;
 
@@ -63,6 +66,8 @@ public class Main {
                     try {
                         Long createdId = memberController.createMember(name, birthdate, email, gender);
                         System.out.println("✅ 회원 등록 완료 (ID: " + createdId + ")");
+                    } catch (MemberException e) {
+                        System.out.println("❌ " + e.getMessage());
                     } catch (IllegalArgumentException e) {
                         System.out.println("❌ " + e.getMessage());
                     }
@@ -80,11 +85,11 @@ public class Main {
                             System.out.println("   - 생년월일=" + m.getBirthdate());
                             System.out.println("   - 이메일=" + m.getEmail());
                             System.out.println("   - 성별=" + m.getGender());
-                        } else {
-                            System.out.println("⚠️ 해당 ID의 회원을 찾을 수 없습니다.");
                         }
-                    } catch (NumberFormatException e) {
-                        System.out.println("❌ 유효하지 않은 ID 형식입니다. 숫자를 입력해주세요.");
+                    } catch (DuplicateEmailException e) {
+                        System.out.println("⚠️ " + e.getMessage());
+                    } catch (MemberNotFoundException e) {
+                        System.out.println("⚠️ " + e.getMessage());
                     }
                     break;
                 case "3":
@@ -107,11 +112,11 @@ public class Main {
                         boolean deleted = memberController.deleteMember(id);
                         if (deleted) {
                             System.out.println("🗑️ 회원(ID=" + id + ")이 삭제(비활성화)되었습니다.");
-                        } else {
-                            System.out.println("⚠️ 해당 ID의 회원을 찾을 수 없거나 이미 삭제되었습니다.");
                         }
                     } catch (NumberFormatException e) {
                         System.out.println("❌ 유효하지 않은 ID 형식입니다. 숫자를 입력해주세요.");
+                    } catch (MemberNotFoundException e) {
+                        System.out.println("⚠️ " + e.getMessage());
                     }
                     break;
                 }
