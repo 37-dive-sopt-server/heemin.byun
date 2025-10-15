@@ -1,15 +1,18 @@
 package org.sopt.domain;
 
+import java.time.LocalDate;
+import java.time.Period;
+
 public class Member {
 
     private Long id;
     private String name;
-    private String birthdate;
+    private LocalDate birthdate;
     private String email;
     private Gender gender;
     private boolean isDeleted;
 
-    public Member(Long id, String name, String birthdate, String email, Gender gender) {
+    public Member(Long id, String name, LocalDate birthdate, String email, Gender gender) {
         this.id = id;
         this.name = name;
         this.birthdate = birthdate;
@@ -26,7 +29,7 @@ public class Member {
         return name;
     }
 
-    public String getBirthdate() {
+    public LocalDate getBirthdate() {
         return birthdate;
     }
 
@@ -43,5 +46,9 @@ public class Member {
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public int getAge() {
+        return Period.between(birthdate, LocalDate.now()).getYears();
     }
 }
