@@ -3,13 +3,15 @@ package org.sopt.service;
 import org.sopt.exception.DuplicateEmailException;
 import org.sopt.exception.MemberAgeException;
 import org.sopt.exception.MemberNotFoundException;
+import org.sopt.repository.MemberRepository;
 import org.sopt.repository.MemoryMemberRepository;
 
 public class MemberValidator {
-    private final MemoryMemberRepository memberRepository;
+    //private final MemoryMemberRepository memberRepository;
+    private final MemberRepository memberRepository;
     private static final int MINIMUM_AGE = 20;
 
-    public MemberValidator(MemoryMemberRepository memberRepository) {
+    public MemberValidator(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 

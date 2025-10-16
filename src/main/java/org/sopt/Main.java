@@ -6,7 +6,10 @@ import org.sopt.domain.Member;
 import org.sopt.exception.DuplicateEmailException;
 import org.sopt.exception.MemberException;
 import org.sopt.exception.MemberNotFoundException;
+import org.sopt.repository.FileMemberRepository;
+import org.sopt.repository.MemberRepository;
 import org.sopt.repository.MemoryMemberRepository;
+import org.sopt.service.MemberService;
 import org.sopt.service.MemberServiceImpl;
 
 import java.util.List;
@@ -16,9 +19,9 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
 
-        MemoryMemberRepository memberRepository = new MemoryMemberRepository();
-        MemberServiceImpl memberService = new MemberServiceImpl();
-        MemberController memberController = new MemberController();
+        MemberRepository memberRepository = new FileMemberRepository("members.csv");
+        MemberService memberService = new MemberServiceImpl(memberRepository);
+        MemberController memberController = new MemberController(memberService);
 
         Scanner scanner = new Scanner(System.in);
 

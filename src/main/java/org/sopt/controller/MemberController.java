@@ -10,7 +10,11 @@ import java.util.Optional;
 
 public class MemberController {
 
-    private MemberService memberService = new MemberServiceImpl();
+    private MemberService memberService;
+
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
+    }
 
     public Long createMember(String name, String birthdate, String email, Gender gender) {
         return memberService.join(name,birthdate,email,gender);
