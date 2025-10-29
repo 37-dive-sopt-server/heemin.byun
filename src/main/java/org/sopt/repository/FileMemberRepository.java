@@ -2,6 +2,7 @@ package org.sopt.repository;
 
 import org.sopt.domain.Gender;
 import org.sopt.domain.Member;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.io.*;
@@ -12,6 +13,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
+@Primary
 public class FileMemberRepository implements MemberRepository {
 
     private final Path path;
