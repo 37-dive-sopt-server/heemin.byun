@@ -1,34 +1,56 @@
 package org.sopt.controller;
 
-import org.sopt.domain.Gender;
-import org.sopt.domain.Member;
+import jakarta.validation.Valid;
+import org.sopt.dto.MemberResponseDto;
+import org.sopt.dto.PostMemberRequestDto;
+import org.sopt.global.ApiResponseDto;
 import org.sopt.service.MemberService;
-import org.sopt.service.MemberServiceImpl;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
+@RestController
 public class MemberController {
 
-    private MemberService memberService;
+    private final MemberService memberService;
 
     public MemberController(MemberService memberService) {
         this.memberService = memberService;
     }
 
-    public Long createMember(String name, String birthdate, String email, Gender gender) {
-        return memberService.join(name,birthdate,email,gender);
+    @PostMapping("/users")
+    public ResponseEntity<ApiResponseDto<Long>> createMember(
+            @Valid @RequestBody PostMemberRequestDto request) {
+        Long memberId = memberService.join(request);
+        ApiResponseDto<Long> response = ApiResponseDto.success(memberId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    public Optional<Member> findMemberById(Long id) {
-        return memberService.findOne(id);
+    @GetMapping("/users/{id}")
+    public ResponseEntity<ApiResponseDto<MemberResponseDto>> getMember(
+            @PathVariable Long id) {
+        MemberResponseDto member = memberService.findOne(id);
+        ApiResponseDto<MemberResponseDto> response = ApiResponseDto.success(member);
+
+        return ResponseEntity.ok(response);
     }
 
-    public List<Member> getAllMembers() {
-        return memberService.findAllMembers();
+    @GetMapping("/users/all")
+    public ResponseEntity<ApiResponseDto<List<MemberResponseDto>>> getAllMembers() {
+        List<MemberResponseDto> members = memberService.findAllMembers();
+        ApiResponseDto<List<MemberResponseDto>> response = ApiResponseDto.success(members);
+
+        return ResponseEntity.ok(response);
     }
 
-    public boolean deleteMember(Long id) {
-        return memberService.delete(id);
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<ApiResponseDto<Void>> deleteMember(@PathVariable Long id) {
+        memberService.delete(id);
+        ApiResponseDto<Void> response = ApiResponseDto.success();
+
+        return ResponseEntity.ok(response);
+
     }
 }
