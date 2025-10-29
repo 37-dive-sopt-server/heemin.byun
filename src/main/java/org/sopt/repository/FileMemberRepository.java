@@ -2,6 +2,7 @@ package org.sopt.repository;
 
 import org.sopt.domain.Gender;
 import org.sopt.domain.Member;
+import org.springframework.stereotype.Repository;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Repository
 public class FileMemberRepository implements MemberRepository {
 
     private final Path path;

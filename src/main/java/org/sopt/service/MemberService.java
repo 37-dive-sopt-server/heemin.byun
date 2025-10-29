@@ -1,16 +1,17 @@
 package org.sopt.service;
 
-import org.sopt.domain.Gender;
-import org.sopt.domain.Member;
+import org.sopt.dto.MemberResponseDto;
+import org.sopt.dto.PostMemberRequestDto;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
+@Service
 public interface MemberService {
 
-    Long join(String name, String birthdate, String email, Gender gender);
-    Optional<Member> findOne(Long memberId);
-    List<Member> findAllMembers();
-    boolean delete(Long memberId);
+    Long join(PostMemberRequestDto req);
+    MemberResponseDto findOne(Long memberId);
+    List<MemberResponseDto> findAllMembers();
+    void delete(Long memberId);
 
 }
