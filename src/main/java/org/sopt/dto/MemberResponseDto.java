@@ -1,23 +1,19 @@
 package org.sopt.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.sopt.domain.Gender;
 import org.sopt.domain.Member;
 
 import java.time.LocalDate;
 
-@Getter
-@AllArgsConstructor
-public class MemberResponseDto {
-    private Long id;
-    private String name;
-    private LocalDate birthdate;
-    private String email;
-    private Gender gender;
-    private int age;
-
-    // Member -> DTO 변환
+public record MemberResponseDto(
+        Long id,
+        String name,
+        LocalDate birthdate,
+        String email,
+        Gender gender,
+        int age
+) {
+    // Member -> DTO 변환 (정적 팩토리 메서드)
     public static MemberResponseDto from(Member member) {
         return new MemberResponseDto(
                 member.getId(),

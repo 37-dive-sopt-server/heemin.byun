@@ -37,14 +37,14 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Long join(PostMemberRequestDto req) {
-        memberValidator.validateEmailDuplicate(req.getEmail());
-        LocalDate birthdate = LocalDate.parse(req.getBirthdate(), FORMATTER);
+        memberValidator.validateEmailDuplicate(req.email());
+        LocalDate birthdate = LocalDate.parse(req.birthdate(), FORMATTER);
         Member member = new Member(
                 sequence++,
-                req.getName(),
+                req.name(),
                 birthdate,
-                req.getEmail(),
-                req.getGender()
+                req.email(),
+                req.gender()
         );
         memberValidator.validateMemberAge(member.getAge());
         memberRepository.save(member);
