@@ -1,33 +1,34 @@
 package org.sopt.service;
 
-import org.sopt.domain.Gender;
+import jakarta.annotation.PostConstruct;
 import org.sopt.domain.Member;
+import org.sopt.dto.MemberResponseDto;
+import org.sopt.dto.PostMemberRequestDto;
+import org.sopt.exception.MemberNotFoundException;
 import org.sopt.repository.MemberRepository;
-import org.sopt.repository.MemoryMemberRepository;
-
+import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
+@Service
 public class MemberServiceImpl implements MemberService {
 
-    //private final MemoryMemberRepository memberRepository = new MemoryMemberRepository();
     private final MemberRepository memberRepository;
     private final MemberValidator memberValidator;
-
-    /*
-    private static long sequence = 1L;
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-     */
 
     private long sequence; // 파일에 있는 최대 ID 다음부터 시작
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd");
 
-    public MemberServiceImpl(MemberRepository memberRepository) {
+    public MemberServiceImpl(MemberRepository memberRepository, MemberValidator memberValidator) {
         this.memberRepository = memberRepository;
-        this.memberValidator = new MemberValidator(memberRepository);
+        this.memberValidator = memberValidator;
+    }
+
+    @PostConstruct
+    public void init() {
         this.sequence = memberRepository.findAll().stream()
                 .max(Comparator.comparingLong(Member::getId))
                 .map(m -> m.getId() + 1)
@@ -35,29 +36,38 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Long join(String name, String birthdateStr, String email, Gender gender) {
-        memberValidator.validateEmailDuplicate(email);
-        LocalDate birthdate = LocalDate.parse(birthdateStr, FORMATTER);
-        Member member = new Member(sequence++, name, birthdate, email, gender);
+    public Long join(PostMemberRequestDto req) {
+        memberValidator.validateEmailDuplicate(req.email());
+        LocalDate birthdate = LocalDate.parse(req.birthdate(), FORMATTER);
+        Member member = new Member(
+                sequence++,
+                req.name(),
+                birthdate,
+                req.email(),
+                req.gender()
+        );
         memberValidator.validateMemberAge(member.getAge());
         memberRepository.save(member);
         return member.getId();
     }
 
     @Override
-    public Optional<Member> findOne(Long memberId) {
-        memberValidator.validateMemberExists(memberId);
-        return memberRepository.findById(memberId);
+    public MemberResponseDto findOne(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
+        return MemberResponseDto.from(member);
     }
 
     @Override
-    public List<Member> findAllMembers() {
-        return memberRepository.findAll();
+    public List<MemberResponseDto> findAllMembers() {
+        return memberRepository.findAll().stream()
+                .map(MemberResponseDto::from)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public boolean delete(Long memberId) {
+    public void delete(Long memberId) {
         memberValidator.validateMemberExists(memberId);
-        return memberRepository.softDelete(memberId);
+        memberRepository.softDelete(memberId);
     }
 }

@@ -4,10 +4,11 @@ import org.sopt.exception.DuplicateEmailException;
 import org.sopt.exception.MemberAgeException;
 import org.sopt.exception.MemberNotFoundException;
 import org.sopt.repository.MemberRepository;
-import org.sopt.repository.MemoryMemberRepository;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MemberValidator {
-    //private final MemoryMemberRepository memberRepository;
+
     private final MemberRepository memberRepository;
     private static final int MINIMUM_AGE = 20;
 

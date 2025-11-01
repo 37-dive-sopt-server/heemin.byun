@@ -11,11 +11,13 @@ import org.sopt.repository.MemberRepository;
 import org.sopt.repository.MemoryMemberRepository;
 import org.sopt.service.MemberService;
 import org.sopt.service.MemberServiceImpl;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
-
+/*
 public class Main {
     public static void main(String[] args) {
 
@@ -131,5 +133,13 @@ public class Main {
                     System.out.println("🚫 잘못된 메뉴 선택입니다. 다시 시도해주세요.");
             }
         }
+    }
+}
+
+ */
+@SpringBootApplication
+public class Main {
+    public static void main(String[] args) {
+        SpringApplication.run(Main.class, args);
     }
 }
