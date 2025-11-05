@@ -7,6 +7,7 @@ import org.sopt.dto.ArticleResponseDto;
 import org.sopt.dto.ArticleSummaryDto;
 import org.sopt.dto.CreateArticleRequestDto;
 import org.sopt.exception.ArticleNotFoundException;
+import org.sopt.exception.DuplicateTitleException;
 import org.sopt.exception.MemberNotFoundException;
 import org.sopt.repository.ArticleRepository;
 import org.sopt.repository.MemberRepository;
@@ -27,6 +28,11 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     @Transactional
     public Long createArticle(CreateArticleRequestDto req) {
+        // 제목 중복 확인
+        if (articleRepository.existsByTitle(req.title())) {
+            throw new DuplicateTitleException(req.title());
+        }
+
         // 회원 존재 확인
         Member member = memberRepository.findByIdAndIsDeletedFalse(req.memberId())
                 .orElseThrow(() -> new MemberNotFoundException(req.memberId()));

@@ -25,7 +25,7 @@ public class Article {
 
     private LocalDate createdDate;
 
-    @Column(nullable = false, length = 200)
+    @Column(nullable = false, length = 200, unique = true)
     private String title;
 
     private String content;

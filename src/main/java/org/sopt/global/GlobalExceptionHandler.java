@@ -57,6 +57,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
+    @ExceptionHandler(DuplicateTitleException.class)
+    public ResponseEntity<ApiResponseDto<Void>> handleDuplicateTitleException(
+            DuplicateTitleException e) {
+        ApiResponseDto<Void> response = ApiResponseDto.error(409, e.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
     // 400: Validation 실패 (@Valid 어노테이션)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponseDto<Map<String, String>>> handleValidationException(
