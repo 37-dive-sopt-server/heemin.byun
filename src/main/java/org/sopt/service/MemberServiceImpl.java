@@ -7,6 +7,8 @@ import org.sopt.dto.PostMemberRequestDto;
 import org.sopt.exception.MemberNotFoundException;
 import org.sopt.repository.MemberRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
@@ -65,11 +67,9 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional
     public void delete(Long memberId) {
         memberValidator.validateMemberExists(memberId);
-        int updated = memberRepository.softDeleteById(memberId);
-        if (updated == 0) {
-            throw new MemberNotFoundException(memberId);
-        }
+        memberRepository.softDeleteById(memberId);
     }
 }
