@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.sopt.domain.Article;
 import org.sopt.domain.Member;
 import org.sopt.dto.ArticleResponseDto;
+import org.sopt.dto.ArticleSummaryDto;
 import org.sopt.dto.CreateArticleRequestDto;
 import org.sopt.exception.ArticleNotFoundException;
 import org.sopt.exception.MemberNotFoundException;
@@ -11,6 +12,9 @@ import org.sopt.repository.ArticleRepository;
 import org.sopt.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -47,5 +51,12 @@ public class ArticleServiceImpl implements ArticleService {
                 .orElseThrow(() -> new ArticleNotFoundException(articleId));
 
         return ArticleResponseDto.from(article);
+    }
+
+    @Override
+    public List<ArticleSummaryDto> getAllArticles() {
+        return articleRepository.findAll().stream()
+                .map(ArticleSummaryDto::from)
+                .collect(Collectors.toList());
     }
 }

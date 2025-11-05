@@ -3,6 +3,7 @@ package org.sopt.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.sopt.dto.ArticleResponseDto;
+import org.sopt.dto.ArticleSummaryDto;
 import org.sopt.dto.CreateArticleRequestDto;
 import org.sopt.global.ApiResponseDto;
 import org.sopt.service.ArticleService;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/articles")
@@ -36,6 +39,15 @@ public class ArticleController {
 
         ArticleResponseDto article = articleService.getArticle(id);
         ApiResponseDto<ArticleResponseDto> response = ApiResponseDto.success(article);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponseDto<List<ArticleSummaryDto>>> getAllArticles() {
+
+        List<ArticleSummaryDto> articles = articleService.getAllArticles();
+        ApiResponseDto<List<ArticleSummaryDto>> response = ApiResponseDto.success(articles);
 
         return ResponseEntity.ok(response);
     }
