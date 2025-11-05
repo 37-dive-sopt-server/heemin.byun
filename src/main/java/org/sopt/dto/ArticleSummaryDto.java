@@ -7,6 +7,7 @@ import java.time.LocalDate;
 
 public record ArticleSummaryDto(
         Long id,
+        Long memberId,
         String memberName,
         Category category,
         LocalDate createdDate,
@@ -15,6 +16,7 @@ public record ArticleSummaryDto(
     public static ArticleSummaryDto from(Article article) {
         return new ArticleSummaryDto(
                 article.getId(),
+                article.getMember().getId(),
                 article.getMember().getName(),
                 article.getCategory(),
                 article.getCreatedDate(),
