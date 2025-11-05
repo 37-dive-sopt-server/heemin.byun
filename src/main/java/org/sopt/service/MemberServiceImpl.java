@@ -40,27 +40,26 @@ public class MemberServiceImpl implements MemberService {
         memberValidator.validateEmailDuplicate(req.email());
         LocalDate birthdate = LocalDate.parse(req.birthdate(), FORMATTER);
         Member member = new Member(
-                sequence++,
                 req.name(),
                 birthdate,
                 req.email(),
                 req.gender()
         );
         memberValidator.validateMemberAge(member.getAge());
-        memberRepository.save(member);
-        return member.getId();
+        Member savedMember = memberRepository.save(member);
+        return savedMember.getId();
     }
 
     @Override
     public MemberResponseDto findOne(Long memberId) {
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
         return MemberResponseDto.from(member);
     }
 
     @Override
     public List<MemberResponseDto> findAllMembers() {
-        return memberRepository.findAll().stream()
+        return memberRepository.findByIsDeletedFalse().stream()
                 .map(MemberResponseDto::from)
                 .collect(Collectors.toList());
     }
@@ -68,6 +67,9 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void delete(Long memberId) {
         memberValidator.validateMemberExists(memberId);
-        memberRepository.softDelete(memberId);
+        int updated = memberRepository.softDeleteById(memberId);
+        if (updated == 0) {
+            throw new MemberNotFoundException(memberId);
+        }
     }
 }

@@ -18,7 +18,7 @@ public class MemberValidator {
 
     // 이메일 중복 검증
     public void validateEmailDuplicate(String email) {
-        if (memberRepository.existsActiveByEmail(email)) {
+        if (memberRepository.existsByEmailAndIsDeletedFalse(email)) {
             throw new DuplicateEmailException(email);
         }
     }
@@ -32,7 +32,7 @@ public class MemberValidator {
 
     // 회원이 존재하는지 검증
     public void validateMemberExists(Long memberId) {
-        if (!memberRepository.findById(memberId).isPresent()) {
+        if (!memberRepository.findByIdAndIsDeletedFalse(memberId).isPresent()) {
             throw new MemberNotFoundException(memberId);
         }
     }
