@@ -7,6 +7,8 @@ import org.sopt.dto.PostMemberRequestDto;
 import org.sopt.exception.MemberNotFoundException;
 import org.sopt.repository.MemberRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
@@ -40,34 +42,34 @@ public class MemberServiceImpl implements MemberService {
         memberValidator.validateEmailDuplicate(req.email());
         LocalDate birthdate = LocalDate.parse(req.birthdate(), FORMATTER);
         Member member = new Member(
-                sequence++,
                 req.name(),
                 birthdate,
                 req.email(),
                 req.gender()
         );
         memberValidator.validateMemberAge(member.getAge());
-        memberRepository.save(member);
-        return member.getId();
+        Member savedMember = memberRepository.save(member);
+        return savedMember.getId();
     }
 
     @Override
     public MemberResponseDto findOne(Long memberId) {
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
         return MemberResponseDto.from(member);
     }
 
     @Override
     public List<MemberResponseDto> findAllMembers() {
-        return memberRepository.findAll().stream()
+        return memberRepository.findByIsDeletedFalse().stream()
                 .map(MemberResponseDto::from)
                 .collect(Collectors.toList());
     }
 
     @Override
+    @Transactional
     public void delete(Long memberId) {
         memberValidator.validateMemberExists(memberId);
-        memberRepository.softDelete(memberId);
+        memberRepository.softDeleteById(memberId);
     }
 }

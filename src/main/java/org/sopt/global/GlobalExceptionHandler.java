@@ -1,9 +1,6 @@
 package org.sopt.global;
 
-import org.sopt.exception.DuplicateEmailException;
-import org.sopt.exception.MemberAgeException;
-import org.sopt.exception.MemberException;
-import org.sopt.exception.MemberNotFoundException;
+import org.sopt.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -51,6 +48,20 @@ public class GlobalExceptionHandler {
 
         ApiResponseDto<Void> response = ApiResponseDto.error(400, e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(ArticleNotFoundException.class)
+    public ResponseEntity<ApiResponseDto<Void>> handleArticleNotFoundException(
+            ArticleNotFoundException e) {
+        ApiResponseDto<Void> response = ApiResponseDto.error(404, e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(DuplicateTitleException.class)
+    public ResponseEntity<ApiResponseDto<Void>> handleDuplicateTitleException(
+            DuplicateTitleException e) {
+        ApiResponseDto<Void> response = ApiResponseDto.error(409, e.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
     // 400: Validation 실패 (@Valid 어노테이션)

@@ -11,7 +11,7 @@ import java.nio.file.*;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
-
+/*
 @Repository
 @Primary
 public class FileMemberRepository implements MemberRepository {
@@ -136,3 +136,5 @@ public class FileMemberRepository implements MemberRepository {
         return s == null ? "" : s.replace(JOIN, " "); // 구분자 보호
     }
 }
+
+ */
