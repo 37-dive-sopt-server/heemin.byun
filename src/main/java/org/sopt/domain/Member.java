@@ -25,15 +25,18 @@ public class Member {
 
     private boolean isDeleted;
 
+    private String password;
+
     @OneToMany(fetch = FetchType.LAZY)
     private List<Article> articles = new ArrayList<>();
 
-    public Member(String name, LocalDate birthdate, String email, Gender gender) {
+    public Member(String name, LocalDate birthdate, String email, Gender gender,String password) {
         this.name = name;
         this.birthdate = birthdate;
         this.email = email;
         this.gender = gender;
         this.isDeleted = false;
+        this.password = password;
     }
 
     public Member() {
@@ -71,4 +74,7 @@ public class Member {
     public int getAge() {
         return Period.between(birthdate, LocalDate.now()).getYears();
     }
+
+    public String getPassword() {return password;}
+
 }

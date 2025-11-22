@@ -20,4 +20,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Modifying
     @Query("UPDATE Member m SET m.isDeleted = true WHERE m.id = :id")
     int softDeleteById(@Param("id") Long id);
+
+    Optional<Member> findByEmail(String email);
 }

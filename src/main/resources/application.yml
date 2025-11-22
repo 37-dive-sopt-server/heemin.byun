@@ -1,3 +1,6 @@
+server:
+  port: 8087
+
 spring:
   application:
     name: assignment
@@ -16,3 +19,8 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
     show-sql: true
+
+security:
+  jwt:
+    secret: serverz-fighting-umm-umm....-yes-yes!!!!!
+    expires-in-seconds: 3600

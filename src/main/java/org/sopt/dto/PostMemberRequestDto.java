@@ -22,5 +22,8 @@ public record PostMemberRequestDto(
         String email,
 
         @NotNull(message = "성별은 필수입니다.")
-        Gender gender
+        Gender gender,
+
+        @NotNull(message = "비밀번호는 필수입니다.")
+        String password
 ) {}

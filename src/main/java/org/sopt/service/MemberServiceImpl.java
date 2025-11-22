@@ -45,7 +45,8 @@ public class MemberServiceImpl implements MemberService {
                 req.name(),
                 birthdate,
                 req.email(),
-                req.gender()
+                req.gender(),
+                req.password()
         );
         memberValidator.validateMemberAge(member.getAge());
         Member savedMember = memberRepository.save(member);
