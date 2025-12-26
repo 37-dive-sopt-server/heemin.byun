@@ -9,7 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "articles")
+@Table(name = "articles", indexes = {
+        @Index(name = "idx_article_member_id", columnList = "memberId"),
+        @Index(name = "idx_article_created_date", columnList = "createdDate"),
+        @Index(name = "idx_article_category", columnList = "category"),
+        @Index(name = "idx_article_category_created", columnList = "category, createdDate")
+})
 @Getter
 @NoArgsConstructor
 public class Article {

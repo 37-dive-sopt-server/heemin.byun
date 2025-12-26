@@ -7,7 +7,11 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "comments")
+@Table(name = "comments", indexes = {
+        @Index(name = "idx_comment_article_id", columnList = "articleId"),
+        @Index(name = "idx_comment_member_id", columnList = "memberId"),
+        @Index(name = "idx_comment_article_created", columnList = "articleId, createdDate")
+})
 @Getter
 @NoArgsConstructor
 public class Comment {

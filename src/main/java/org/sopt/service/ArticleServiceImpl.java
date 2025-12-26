@@ -2,6 +2,7 @@ package org.sopt.service;
 
 import lombok.RequiredArgsConstructor;
 import org.sopt.domain.Article;
+import org.sopt.domain.Category;
 import org.sopt.domain.Member;
 import org.sopt.dto.ArticleResponseDto;
 import org.sopt.dto.ArticleSummaryDto;
@@ -11,6 +12,7 @@ import org.sopt.exception.DuplicateTitleException;
 import org.sopt.exception.MemberNotFoundException;
 import org.sopt.repository.ArticleRepository;
 import org.sopt.repository.MemberRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,7 +55,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public ArticleResponseDto getArticle(Long articleId) {
 
-        Article article = articleRepository.findById(articleId)
+        Article article = articleRepository.findByIdWithMemberAndComments(articleId)
                 .orElseThrow(() -> new ArticleNotFoundException(articleId));
 
         return ArticleResponseDto.from(article);
@@ -61,7 +63,8 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public List<ArticleSummaryDto> getAllArticles() {
-        return articleRepository.findAll().stream()
+
+        return articleRepository.findAllWithMember().stream()
                 .map(ArticleSummaryDto::from)
                 .collect(Collectors.toList());
     }

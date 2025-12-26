@@ -49,7 +49,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentResponseDto getComment(Long commentId) {
-        Comment comment = commentRepository.findById(commentId)
+        Comment comment = commentRepository.findByIdWithMember(commentId)
                 .orElseThrow(() -> new CommentNotFoundException(commentId));
 
         return CommentResponseDto.from(comment);
