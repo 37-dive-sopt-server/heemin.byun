@@ -5,9 +5,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "articles")
+@Table(name = "articles", indexes = {
+        @Index(name = "idx_article_member_id", columnList = "memberId"),
+        @Index(name = "idx_article_created_date", columnList = "createdDate"),
+        @Index(name = "idx_article_category", columnList = "category"),
+        @Index(name = "idx_article_category_created", columnList = "category, createdDate")
+})
 @Getter
 @NoArgsConstructor
 public class Article {
@@ -29,6 +36,10 @@ public class Article {
     private String title;
 
     private String content;
+
+    @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
+
 
     public Article(Member member, Category category, String title, String content) {
         this.member = member;

@@ -4,6 +4,8 @@ import org.sopt.domain.Article;
 import org.sopt.domain.Category;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public record ArticleResponseDto(
         Long id,
@@ -12,7 +14,8 @@ public record ArticleResponseDto(
         Category category,
         LocalDate createdDate,
         String title,
-        String content
+        String content,
+        List<CommentResponseDto> comments
 ) {
     public static ArticleResponseDto from(Article article) {
         return new ArticleResponseDto(
@@ -22,7 +25,10 @@ public record ArticleResponseDto(
                 article.getCategory(),
                 article.getCreatedDate(),
                 article.getTitle(),
-                article.getContent()
+                article.getContent(),
+                article.getComments().stream()
+                        .map(CommentResponseDto::from)
+                        .collect(Collectors.toList())
         );
     }
 }

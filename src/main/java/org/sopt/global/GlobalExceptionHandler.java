@@ -23,6 +23,24 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
+    // 404: 댓글을 찾을 수 없음
+    @ExceptionHandler(CommentNotFoundException.class)
+    public ResponseEntity<ApiResponseDto<Void>> handleCommentNotFoundException(
+            CommentNotFoundException e) {
+
+        ApiResponseDto<Void> response = ApiResponseDto.error(404, e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    // 403: 댓글 수정 권한 없음
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ApiResponseDto<Void>> handleUnauthorizedException(
+            UnauthorizedException e) {
+
+        ApiResponseDto<Void> response = ApiResponseDto.error(403, e.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+    }
+
     // 409: 이메일 중복
     @ExceptionHandler(DuplicateEmailException.class)
     public ResponseEntity<ApiResponseDto<Void>> handleDuplicateEmailException(
